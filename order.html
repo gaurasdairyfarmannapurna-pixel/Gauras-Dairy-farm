@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Milk Allocation Request — Gauras Dairy</title>
+    <style>
+        :root {
+            --bg-sky: #bae6fd;
+            --bg-gradient: linear-gradient(180deg, #bae6fd 0%, #e0f2fe 40%, #f0fdf4 100%);
+            --card-paper: #fdfdfb;
+            --text-dark: #7c2d12;
+            --text-muted: #9a3412;
+            --accent-blue: #0284c7;
+            --accent-gold: #eab308;
+            --forest-green: #15803d;
+            --border-wood: #7c2d12;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-dark);
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            
+            /* Smooth fade-in arrival effect */
+            opacity: 0;
+            animation: fadeInPage 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+
+        @keyframes fadeInPage {
+            to { opacity: 1; }
+        }
+
+        /* Class applied via JS to smoothly fade out the page before switching */
+        body.fade-out {
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px; /* Locked mobile width */
+            padding: 24px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+            position: relative;
+        }
+
+        /* --- GLOBAL HEADER & BURGER MENU --- */
+        .global-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px dashed var(--border-wood);
+            padding-bottom: 14px;
+            margin-bottom: 10px;
+            z-index: 10;
+            position: relative;
+            background: rgba(240, 253, 244, 0.4);
+            border-radius: 8px;
+            padding: 10px;
+        }
+        .global-header .logo {
+            font-size: 20px;
+            font-weight: 900;
+            color: var(--forest-green);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .burger-btn {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 24px;
+            height: 16px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            z-index: 11;
+        }
+        .burger-btn span {
+            width: 100%;
+            height: 3px;
+            background-color: var(--border-wood);
+            border-radius: 2px;
+        }
+
+        /* Drawer Overlay */
+        .drawer-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(124, 45, 18, 0.45);
+            z-index: 9998;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .drawer-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Drawer Menu */
+        .menu-drawer {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 280px;
+            height: 100%;
+            background: var(--card-paper);
+            border-left: 4px solid var(--border-wood);
+            box-shadow: -8px 0 24px rgba(124, 45, 18, 0.2);
+            z-index: 9999;
+            padding: 32px 20px;
+            display: flex;
+            flex-direction: column;
+            transition: right 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .menu-drawer.active {
+            right: 0;
+        }
+        .menu-drawer .close-btn {
+            align-self: flex-end;
+            font-size: 32px;
+            background: transparent;
+            border: none;
+            color: var(--border-wood);
+            cursor: pointer;
+            margin-bottom: 24px;
+            line-height: 1;
+        }
+        .drawer-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .drawer-nav a {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--text-dark);
+            text-decoration: none;
+            padding: 12px 16px;
+            border: 2px solid transparent;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .drawer-nav a:hover {
+            background: #fef08a;
+            border-color: var(--border-wood);
+            transform: translateY(-2px);
+        }
+
+        /* --- GLOBAL FOOTER --- */
+        .global-footer {
+            border-top: 3px dashed var(--border-wood);
+            padding: 24px 16px;
+            text-align: center;
+            background: var(--card-paper);
+            border-radius: 16px;
+            border: 3px solid var(--border-wood);
+            box-shadow: 0 6px 12px rgba(124, 45, 18, 0.08);
+            position: relative;
+            margin-top: 20px;
+        }
+        .global-footer h3 {
+            font-size: 18px;
+            font-weight: 900;
+            color: var(--forest-green);
+            margin-bottom: 4px;
+        }
+        .global-footer p {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 8px;
+        }
+        .social-links a {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--accent-blue);
+            text-decoration: none;
+            border-bottom: 2px solid var(--accent-blue);
+        }
+
+        /* --- FORM STYLING --- */
+        .section-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            font-weight: 700;
+            border-bottom: 3px dashed var(--border-wood);
+            padding-bottom: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            background-color: var(--card-paper);
+            border: 3px solid var(--border-wood);
+            border-radius: 12px;
+            padding: 14px;
+            color: var(--text-dark);
+            font-size: 16px;
+            font-weight: 600;
+            outline: none;
+            box-shadow: inset 0 2px 4px rgba(124, 45, 18, 0.05);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+        }
+
+        .row {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            width: 100%;
+            background: linear-gradient(135deg, var(--accent-gold) 0%, #facc15 100%);
+            color: var(--text-dark);
+            border: 3px solid var(--border-wood);
+            border-radius: 16px;
+            padding: 16px;
+            font-size: 17px;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 3px 4px 0 var(--border-wood);
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 4px 5px 0 var(--border-wood);
+        }
+
+        .btn:active {
+            transform: translateY(2px);
+            box-shadow: 1px 1px 0 var(--border-wood);
+        }
+    </style>
+</head>
+<body>
+
+<!-- DRAWER OVERLAY AND MENU -->
+<div class="drawer-overlay" id="drawerOverlay" onclick="toggleMenu()"></div>
+<div class="menu-drawer" id="menuDrawer">
+    <button class="close-btn" onclick="toggleMenu()">&times;</button>
+    <nav class="drawer-nav">
+        <a href="/">🌾 Farm Home</a>
+        <a href="order.html">🥛 Book Milk Allocation</a>
+        <a href="qna.html">❓ Q&As / Help Hub</a>
+        <a href="app-intro.html">📱 Dairy Manager App</a>
+    </nav>
+</div>
+
+<div class="container">
+    <!-- GLOBAL HEADER -->
+    <header class="global-header">
+        <div class="logo">🥛 Gauras Dairy</div>
+        <button class="burger-btn" onclick="toggleMenu()" aria-label="Open Menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </header>
+
+    <section>
+        <h2 class="section-title">🐄 Direct Milk Allocation Request</h2>
+
+        <form id="deliveryForm" action="/submit-order" method="POST" onsubmit="interceptSubmission(event)">
+            
+            <input type="hidden" name="_subject" value="New Gauras Dairy Milk Request!">
+            <input type="hidden" name="_captcha" value="false">
+            <input type="hidden" name="_template" value="table">
+            <input type="hidden" name="Farms Origin" value="Ward 2, Behind Ganesh Ji Mandir, Nainwa">
+            <input type="hidden" name="Rate Applied" id="hiddenPriceRate" value="₹60 per Liter">
+
+            <div class="form-group">
+                <label>Dairy Selection</label>
+                <select name="Milk Breed Variety" id="milkType" onchange="updateDynamicPrice()" required>
+                    <option value="Sahiwal Cross Cow" data-price="60">Sahiwal Cross Cow Milk (₹60/Ltr)</option>
+                    <option value="Premium Murrah Buffalo" data-price="70">Premium Murrah Buffalo Milk (₹70/Ltr)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Preferred Delivery Time</label>
+                <select name="Delivery Schedule Preference" id="deliveryTime" required>
+                    <option value="Morning Only">Morning Only</option>
+                    <option value="Evening Only">Evening Only</option>
+                    <option value="Both (Morning & Evening)">Both (Morning & Evening)</option>
+                </select>
+            </div>
+
+            <div class="row">
+                <div class="form-group" style="flex: 1;">
+                    <label>Volume (Ltrs/Day)</label>
+                    <input type="number" name="Volume Per Day" id="quantity" min="1" max="10" value="1" required>
+                </div>
+                <div class="form-group" style="flex: 1;">
+                    <label>Duration (Days)</label>
+                    <input type="number" name="Subscription Length" id="duration" min="1" max="90" value="30" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" name="Customer Name" id="custName" placeholder="Your Name" required>
+            </div>
+
+            <div class="form-group">
+                <label>Delivery Street Address (Nainwa Only)</label>
+                <textarea name="Delivery Destination" id="address" rows="2" placeholder="House No., Ward, Landmark Details" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Contact Number (For Call Verification)</label>
+                <input type="tel" name="Customer Phone" id="phone" placeholder="10-digit mobile number" pattern="[0-9]{10}" required>
+            </div>
+
+            <button type="submit" class="btn" id="submitFormBtn">Submit Allocation Request</button>
+        </form>
+    </section>
+
+    <!-- GLOBAL FOOTER -->
+    <footer class="global-footer">
+        <div style="font-size: 28px; margin-bottom: 8px;">🚜 🌾</div>
+        <h3>Gauras Dairy Farm</h3>
+        <p>Direct farm-to-home raw milk allocations in Nainwa, Rajasthan.</p>
+        <div class="social-links">
+            <a href="https://instagram.com/gaurasdairy" target="_blank">📸 Instagram</a>
+            <a href="qna.html">❓ Q&As Hub</a>
+            <a href="app-intro.html">📱 Our App</a>
+        </div>
+        <p style="font-size: 11px; color: var(--text-muted); margin-top: 16px;">© 2026 Gauras Dairy Farm. Handcrafted with love.</p>
+    </footer>
+</div>
+
+<script>
+    function updateDynamicPrice() {
+        const selectEl = document.getElementById('milkType');
+        const selectedOption = selectEl.options[selectEl.selectedIndex];
+        const currentPrice = selectedOption.getAttribute('data-price');
+        document.getElementById('hiddenPriceRate').value = `₹${currentPrice} per Liter`;
+    }
+
+   function interceptSubmission(event) {
+        event.preventDefault(); 
+        const form = document.getElementById('deliveryForm');
+        
+        fetch(form.action, {
+            method: "POST",
+            body: new FormData(form)
+        }).then(response => {
+            if (response.ok) {
+                window.location.href = 'billing.html';
+            } else {
+                alert("Backend database transmission error.");
+            }
+        }).catch(error => {
+            alert("Connection to local backend server failed.");
+        });
+    }
+
+    // Toggle Menu Drawer
+    function toggleMenu() {
+        const drawer = document.getElementById('menuDrawer');
+        const overlay = document.getElementById('drawerOverlay');
+        drawer.classList.toggle('active');
+        overlay.classList.toggle('active');
+    }
+</script>
+</body>
+</html>

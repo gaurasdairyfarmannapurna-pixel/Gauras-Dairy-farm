@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gauras Dashboard — Secure Billing</title>
+    <style>
+        :root {
+            --bg-sky: #bae6fd;
+            --bg-gradient: linear-gradient(180deg, #bae6fd 0%, #e0f2fe 40%, #f0fdf4 100%);
+            --card-paper: #fdfdfb;
+            --text-dark: #7c2d12;
+            --text-muted: #9a3412;
+            --accent-blue: #0284c7;
+            --border-wood: #7c2d12;
+            --success: #16803d;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-dark);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px; /* Locked mobile-first size */
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            position: relative;
+        }
+
+        /* --- GLOBAL HEADER & BURGER MENU --- */
+        .global-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px dashed var(--border-wood);
+            padding-bottom: 14px;
+            z-index: 10;
+            position: relative;
+            background: rgba(240, 253, 244, 0.4);
+            border-radius: 8px;
+            padding: 10px;
+        }
+        .global-header .logo {
+            font-size: 20px;
+            font-weight: 900;
+            color: var(--forest-green);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .burger-btn {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 24px;
+            height: 16px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            z-index: 11;
+        }
+        .burger-btn span {
+            width: 100%;
+            height: 3px;
+            background-color: var(--border-wood);
+            border-radius: 2px;
+        }
+
+        /* Drawer Overlay */
+        .drawer-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(124, 45, 18, 0.45);
+            z-index: 9998;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .drawer-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Drawer Menu */
+        .menu-drawer {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 280px;
+            height: 100%;
+            background: var(--card-paper);
+            border-left: 4px solid var(--border-wood);
+            box-shadow: -8px 0 24px rgba(124, 45, 18, 0.2);
+            z-index: 9999;
+            padding: 32px 20px;
+            display: flex;
+            flex-direction: column;
+            transition: right 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .menu-drawer.active {
+            right: 0;
+        }
+        .menu-drawer .close-btn {
+            align-self: flex-end;
+            font-size: 32px;
+            background: transparent;
+            border: none;
+            color: var(--border-wood);
+            cursor: pointer;
+            margin-bottom: 24px;
+            line-height: 1;
+        }
+        .drawer-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .drawer-nav a {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--text-dark);
+            text-decoration: none;
+            padding: 12px 16px;
+            border: 2px solid transparent;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .drawer-nav a:hover {
+            background: #fef08a;
+            border-color: var(--border-wood);
+            transform: translateY(-2px);
+        }
+
+        /* --- GLOBAL FOOTER --- */
+        .global-footer {
+            border-top: 3px dashed var(--border-wood);
+            padding: 24px 16px;
+            text-align: center;
+            background: var(--card-paper);
+            border-radius: 16px;
+            border: 3px solid var(--border-wood);
+            box-shadow: 0 6px 12px rgba(124, 45, 18, 0.08);
+            position: relative;
+            margin-top: 10px;
+        }
+        .global-footer h3 {
+            font-size: 18px;
+            font-weight: 900;
+            color: var(--forest-green);
+            margin-bottom: 4px;
+        }
+        .global-footer p {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 8px;
+        }
+        .social-links a {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--accent-blue);
+            text-decoration: none;
+            border-bottom: 2px solid var(--accent-blue);
+        }
+
+        /* --- RECEIPT CONTENT --- */
+        .receipt-card {
+            background-color: var(--card-paper);
+            border: 3px solid var(--border-wood);
+            border-radius: 20px 8px 20px 8px;
+            padding: 32px 24px;
+            text-align: center;
+            box-shadow: 0 10px 20px rgba(124, 45, 18, 0.12);
+        }
+
+        h1 { 
+            font-size: 24px; 
+            margin-bottom: 12px; 
+            font-weight: 800; 
+            color: var(--success);
+        }
+
+        p.info-text { 
+            color: var(--text-dark); 
+            line-height: 1.6; 
+            margin-bottom: 28px; 
+            font-size: 15px; 
+        }
+
+        .status-badge {
+            background: #f0fdf4;
+            border: 2px dashed var(--success);
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            color: var(--success);
+            font-weight: 700;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 24px;
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            transition: transform 0.2s ease;
+        }
+
+        .back-btn:hover {
+            transform: scale(1.05);
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .bouncing-wheat {
+            font-size: 54px;
+            margin-bottom: 16px;
+            animation: bounce 2s infinite;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+
+<!-- DRAWER OVERLAY AND MENU -->
+<div class="drawer-overlay" id="drawerOverlay" onclick="toggleMenu()"></div>
+<div class="menu-drawer" id="menuDrawer">
+    <button class="close-btn" onclick="toggleMenu()">&times;</button>
+    <nav class="drawer-nav">
+        <a href="/">🌾 Farm Home</a>
+        <a href="order.html">🥛 Book Milk Allocation</a>
+        <a href="qna.html">❓ Q&As / Help Hub</a>
+        <a href="app-intro.html">📱 Dairy Manager App</a>
+    </nav>
+</div>
+
+<div class="container">
+    <!-- GLOBAL HEADER -->
+    <header class="global-header">
+        <div class="logo">🥛 Gauras Dairy</div>
+        <button class="burger-btn" onclick="toggleMenu()" aria-label="Open Menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </header>
+
+    <div class="receipt-card">
+        <div class="bouncing-wheat">🌾</div>
+        <h1>Request Logged Successfully!</h1>
+        <p class="info-text">Your delivery coordinates have been pinned. Our team will manually call your phone number to authorize your subscription details shortly.<br><br>The online transaction terminal is currently under construction.</p>
+        <div class="status-badge">
+            Terminal State: Awaiting Manual Verification Call
+        </div>
+        <a href="/" class="back-btn">⬅️ Back to Farm Homepage</a>
+    </div>
+
+    <!-- GLOBAL FOOTER -->
+    <footer class="global-footer">
+        <div style="font-size: 28px; margin-bottom: 8px;">🚜 🌾</div>
+        <h3>Gauras Dairy Farm</h3>
+        <p>Direct farm-to-home raw milk allocations in Nainwa, Rajasthan.</p>
+        <div class="social-links">
+            <a href="https://instagram.com/gaurasdairy" target="_blank">📸 Instagram</a>
+            <a href="qna.html">❓ Q&As Hub</a>
+            <a href="app-intro.html">📱 Our App</a>
+        </div>
+        <p style="font-size: 11px; color: var(--text-muted); margin-top: 16px;">© 2026 Gauras Dairy Farm. Handcrafted with love.</p>
+    </footer>
+</div>
+
+<script>
+    // Toggle Menu Drawer
+    function toggleMenu() {
+        const drawer = document.getElementById('menuDrawer');
+        const overlay = document.getElementById('drawerOverlay');
+        drawer.classList.toggle('active');
+        overlay.classList.toggle('active');
+    }
+</script>
+</body>
+</html>

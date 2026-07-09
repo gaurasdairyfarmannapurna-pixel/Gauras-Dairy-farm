@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gauras Dairy Farm — Pure Local Produce</title>
+    <style>
+        :root {
+            --bg-sky: #e0f2fe;          /* Friendly warm blue sky */
+            --bg-gradient: linear-gradient(180deg, #bae6fd 0%, #e0f2fe 40%, #f0fdf4 100%); /* Meadow sky gradient */
+            --card-paper: #fdfdfb;       /* Warm textured milk white paper card */
+            --text-dark: #7c2d12;        /* Deep brick brown for main readable text */
+            --text-muted: #9a3412;       /* Warm brownish orange for muted text */
+            --accent-blue: #0284c7;      /* Country cornflower blue */
+            --accent-gold: #eab308;      /* Warm sunshine yellow */
+            --forest-green: #15803d;     /* Pasture green accent headers */
+            --border-wood: #7c2d12;      /* Sketched border color */
+            --whatsapp-green: #22c55e;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-dark);
+            min-height: 100vh;
+            overflow-x: hidden;
+            /* Global Smooth Page Transition Setup */
+            opacity: 1;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        /* Class applied via JS to smoothly fade out the page before switching */
+        body.fade-out {
+            opacity: 0;
+        }
+
+        .page-wrapper {
+            position: relative;
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+        }
+
+        .scroll-container {
+            width: 100%;
+            max-width: 480px; /* Lock layout strictly to mobile-first viewport */
+            padding: 24px 20px 140px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 75px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* --- GLOBAL HEADER & BURGER MENU --- */
+        .global-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px dashed var(--border-wood);
+            padding-bottom: 14px;
+            margin-bottom: 10px;
+            z-index: 10;
+            position: relative;
+            background: rgba(240, 253, 244, 0.4);
+            border-radius: 8px;
+            padding: 10px;
+        }
+        .global-header .logo {
+            font-size: 20px;
+            font-weight: 900;
+            color: var(--forest-green);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .burger-btn {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 24px;
+            height: 16px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            z-index: 11;
+        }
+        .burger-btn span {
+            width: 100%;
+            height: 3px;
+            background-color: var(--border-wood);
+            border-radius: 2px;
+        }
+
+        /* Drawer Overlay */
+        .drawer-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(124, 45, 18, 0.45);
+            z-index: 9998;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .drawer-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Drawer Menu */
+        .menu-drawer {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 280px;
+            height: 100%;
+            background: var(--card-paper);
+            border-left: 4px solid var(--border-wood);
+            box-shadow: -8px 0 24px rgba(124, 45, 18, 0.2);
+            z-index: 9999;
+            padding: 32px 20px;
+            display: flex;
+            flex-direction: column;
+            transition: right 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .menu-drawer.active {
+            right: 0;
+        }
+        .menu-drawer .close-btn {
+            align-self: flex-end;
+            font-size: 32px;
+            background: transparent;
+            border: none;
+            color: var(--border-wood);
+            cursor: pointer;
+            margin-bottom: 24px;
+            line-height: 1;
+        }
+        .drawer-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .drawer-nav a {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--text-dark);
+            text-decoration: none;
+            padding: 12px 16px;
+            border: 2px solid transparent;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .drawer-nav a:hover {
+            background: #fef08a;
+            border-color: var(--border-wood);
+            transform: translateY(-2px);
+        }
+
+        /* --- GLOBAL FOOTER --- */
+        .global-footer {
+            border-top: 3px dashed var(--border-wood);
+            padding: 24px 16px;
+            text-align: center;
+            background: var(--card-paper);
+            border-radius: 16px;
+            border: 3px solid var(--border-wood);
+            box-shadow: 0 6px 12px rgba(124, 45, 18, 0.08);
+            z-index: 3;
+            position: relative;
+            margin-top: 30px;
+        }
+        .global-footer h3 {
+            font-size: 18px;
+            font-weight: 900;
+            color: var(--forest-green);
+            margin-bottom: 4px;
+        }
+        .global-footer p {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 8px;
+        }
+        .social-links a {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--accent-blue);
+            text-decoration: none;
+            border-bottom: 2px solid var(--accent-blue);
+        }
+
+        /* --- SPRINGY BOUNCY SCROLL & POP ANIMATIONS --- */
+        .section-row {
+            display: flex;
+            flex-direction: column; /* Enforce mobile-first vertical stack */
+            align-items: stretch;
+            gap: 20px;
+            opacity: 0;
+            transform: translateY(40px) scale(0.96);
+            transition: opacity 0.9s cubic-bezier(0.34, 1.56, 0.64, 1), 
+                        transform 0.9s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            z-index: 3; /* Render elements above wobbly line */
+        }
+
+        .section-row.active {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .text-content {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            z-index: 3;
+        }
+
+        .image-content {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            z-index: 3;
+        }
+
+        /* --- FOLK-ART SCRAPBOOK POLAROID IMAGES --- */
+        .cutter-img-container {
+            width: 100%;
+            aspect-ratio: 16 / 11;
+            background: #ffffff;
+            padding: 10px 10px 28px 10px; /* Polaroid margin */
+            border: 3px solid var(--border-wood);
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(124, 45, 18, 0.15);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            z-index: 3;
+        }
+
+        .cutter-img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border: 2px solid var(--border-wood);
+            border-radius: 6px;
+            display: block;
+        }
+
+        /* Sloped hand-cut scrapbooking effects applied only to inside image */
+        .clip-slope-right {
+            transform: rotate(2deg);
+        }
+        .clip-slope-right img {
+            clip-path: polygon(0 0, 100% 6%, 100% 100%, 0 94%);
+        }
+
+        .clip-slope-left {
+            transform: rotate(-2deg);
+        }
+        .clip-slope-left img {
+            clip-path: polygon(0 6%, 100% 0, 100% 94%, 0 100%);
+        }
+
+        .cutter-img-container:hover {
+            transform: scale(1.04) rotate(0deg) !important;
+            box-shadow: 0 12px 24px rgba(124, 45, 18, 0.22);
+        }
+
+        /* --- SVG WOBBLY ZIGZAG BACKGROUND PATH --- */
+        .bg-svg-lines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1; /* In the background */
+            opacity: 0.45;
+        }
+
+        /* --- DAISY WIGGLE KEYFRAMES --- */
+        @keyframes wiggleNode {
+            0% { transform: translate(-50%, -50%) rotate(-8deg) scale(0.95); }
+            100% { transform: translate(-50%, -50%) rotate(8deg) scale(1.05); }
+        }
+
+        /* Emojis placed absolutely in HTML to prevent horizontal squeezing */
+        .daisy-node {
+            position: absolute;
+            font-size: 24px;
+            z-index: 2; /* Above lines, behind cards */
+            transform: translate(-50%, -50%);
+            transform-origin: center;
+            animation: wiggleNode 1.5s ease-in-out infinite alternate;
+            pointer-events: none;
+        }
+
+        /* Animate cow sliding down wobbly line path */
+        .bouncy-cow {
+            position: absolute;
+            font-size: 26px;
+            z-index: 2;
+            pointer-events: none;
+            transform-origin: center;
+            animation: bounceCow 22s ease-in-out infinite alternate;
+        }
+
+        /* Emulates wobbly zigzag path bouncing back and forth down the page */
+        @keyframes bounceCow {
+            0%   { top: 0%; left: 5%; transform: translate(-50%, -50%) scaleX(1); }
+            12%  { top: 12%; left: 95%; transform: translate(-50%, -50%) scaleX(-1); }
+            26%  { top: 26%; left: 5%; transform: translate(-50%, -50%) scaleX(1); }
+            40%  { top: 40%; left: 95%; transform: translate(-50%, -50%) scaleX(-1); }
+            55%  { top: 55%; left: 5%; transform: translate(-50%, -50%) scaleX(1); }
+            70%  { top: 70%; left: 95%; transform: translate(-50%, -50%) scaleX(-1); }
+            85%  { top: 85%; left: 5%; transform: translate(-50%, -50%) scaleX(1); }
+            100% { top: 100%; left: 95%; transform: translate(-50%, -50%) scaleX(-1); }
+        }
+
+        /* --- TRIANGULAR FLOAT BACKGROUND --- */
+        .tri-bg {
+            position: absolute;
+            width: 0;
+            height: 0;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.08;
+        }
+        .tri-1 {
+            top: 12%;
+            left: -10px;
+            border-left: 100px solid transparent;
+            border-right: 100px solid transparent;
+            border-bottom: 180px solid var(--accent-blue);
+        }
+        .tri-2 {
+            top: 48%;
+            right: -10px;
+            border-left: 80px solid transparent;
+            border-right: 80px solid transparent;
+            border-bottom: 140px solid var(--accent-gold);
+            transform: rotate(45deg);
+        }
+        .tri-3 {
+            top: 78%;
+            left: -20px;
+            border-left: 110px solid transparent;
+            border-right: 110px solid transparent;
+            border-bottom: 200px solid var(--forest-green);
+            transform: rotate(-30deg);
+        }
+
+        /* --- TYPOGRAPHY --- */
+        .badge {
+            display: inline-block;
+            background: #fef9c3; /* Sunshine gold paper */
+            border: 2px solid var(--border-wood);
+            padding: 6px 14px;
+            border-radius: 12px 4px 12px 4px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            color: var(--text-dark);
+            box-shadow: 2px 2px 0 var(--border-wood);
+            width: fit-content;
+            position: relative;
+            z-index: 3;
+        }
+
+        h1 { font-size: 34px; font-weight: 900; letter-spacing: -1px; line-height: 1.1; margin-bottom: 12px; color: var(--forest-green); }
+        h2.section-header { font-size: 24px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 12px; color: var(--forest-green); }
+        .text-block { font-size: 15px; line-height: 1.6; color: var(--text-dark); }
+        .text-block p { margin-bottom: 10px; }
+        .user-editable-space { 
+            background: #fffbeb; 
+            border: 2px dashed var(--accent-blue); 
+            padding: 12px; 
+            border-radius: 12px; 
+            font-size: 13px; 
+            color: var(--text-muted); 
+            margin-top: 10px; 
+            font-style: italic; 
+            position: relative;
+            z-index: 3;
+        }
+
+        /* --- PAPER CRAFT CARDS --- */
+        .info-grid { display: flex; gap: 12px; margin: 12px 0; width: 100%; position: relative; z-index: 3; }
+        .milky-card { 
+            flex: 1; 
+            background: var(--card-paper); 
+            border: 3px solid var(--border-wood); 
+            border-radius: 20px 8px 20px 8px; 
+            padding: 16px; 
+            box-shadow: 0 6px 12px rgba(124, 45, 18, 0.1); 
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); 
+            position: relative;
+            z-index: 3;
+        }
+        .milky-card:hover {
+            border-color: var(--accent-blue);
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 10px 20px rgba(124, 45, 18, 0.16);
+        }
+        .milky-card h4 { font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); margin-bottom: 4px; font-weight: 700; }
+        .milky-card p { font-size: 22px; font-weight: 800; color: var(--accent-blue); }
+
+        /* --- FIXED NAVIGATION BASEBAR --- */
+        .bottom-nav-bar {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            background: rgba(240, 253, 244, 0.9);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-top: 3px solid var(--border-wood);
+            padding: 14px 20px 20px 20px;
+            display: flex;
+            gap: 12px;
+            z-index: 999;
+        }
+
+        .btn-primary {
+            flex: 1;
+            background: linear-gradient(135deg, var(--accent-gold) 0%, #facc15 100%);
+            color: var(--text-dark);
+            border: 3px solid var(--border-wood);
+            border-radius: 16px;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: 800;
+            text-align: center;
+            text-decoration: none;
+            box-shadow: 3px 4px 0 var(--border-wood);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            cursor: pointer;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 4px 5px 0 var(--border-wood);
+        }
+
+        /* Click Registry / Feedback Color Change state */
+        .btn-primary.clicked {
+            background: var(--accent-blue) !important;
+            color: #ffffff !important;
+            transform: translateY(2px) !important;
+            box-shadow: 1px 1px 0 var(--border-wood) !important;
+        }
+
+        .btn-whatsapp {
+            width: 50px;
+            height: 50px;
+            background-color: var(--whatsapp-green);
+            border: 3px solid var(--border-wood);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            box-shadow: 3px 4px 0 var(--border-wood);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .btn-whatsapp:hover {
+            transform: translateY(-2px);
+            box-shadow: 4px 5px 0 var(--border-wood);
+        }
+        .btn-whatsapp svg { width: 24px; height: 24px; fill: #FFFFFF; }
+    </style>
+</head>
+<body>
+
+<!-- DRAWER OVERLAY AND MENU -->
+<div class="drawer-overlay" id="drawerOverlay" onclick="toggleMenu()"></div>
+<div class="menu-drawer" id="menuDrawer">
+    <button class="close-btn" onclick="toggleMenu()">&times;</button>
+    <nav class="drawer-nav">
+        <a href="/">🌾 Farm Home</a>
+        <a href="order.html">🥛 Book Milk Allocation</a>
+        <a href="qna.html">❓ Q&As / Help Hub</a>
+        <a href="app-intro.html">📱 Dairy Manager App</a>
+    </nav>
+</div>
+
+<div class="page-wrapper">
+    <!-- Floating Background Geometry -->
+    <div class="tri-bg tri-1"></div>
+    <div class="tri-bg tri-2"></div>
+    <div class="tri-bg tri-3"></div>
+
+    <div class="scroll-container">
+        <!-- SVG Wobbly Sketched Background Lines inside Mobile Viewport (Only the line) -->
+        <svg class="bg-svg-lines" viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <path id="laser-path" d="M 5,0 Q 8,6 95,12 Q 92,18 5,26 Q 8,32 95,40 Q 92,47 5,55 Q 8,62 95,70 Q 92,77 5,85 Q 8,92 95,100" 
+                  fill="none" 
+                  stroke="var(--accent-blue)" 
+                  stroke-width="0.5" 
+                  stroke-dasharray="1 0.6"
+                  vector-effect="non-scaling-stroke" />
+        </svg>
+
+        <!-- Unsquished absolute HTML nodes for daisies and cows -->
+        <div class="daisy-node" style="top: 0%; left: 5%;">🌼</div>
+        <div class="daisy-node" style="top: 12%; left: 95%;">🌼</div>
+        <div class="daisy-node" style="top: 26%; left: 5%;">🌼</div>
+        <div class="daisy-node" style="top: 40%; left: 95%;">🌼</div>
+        <div class="daisy-node" style="top: 55%; left: 5%;">🌼</div>
+        <div class="daisy-node" style="top: 70%; left: 95%;">🌼</div>
+        <div class="daisy-node" style="top: 85%; left: 5%;">🌼</div>
+        <div class="daisy-node" style="top: 100%; left: 95%;">🌼</div>
+
+        <div class="bouncy-cow">🐮</div>
+
+        <!-- GLOBAL HEADER -->
+        <header class="global-header">
+            <div class="logo">🥛 Gauras Dairy</div>
+            <button class="burger-btn" onclick="toggleMenu()" aria-label="Open Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </header>
+
+        <!-- BLOCK 1: BRAND INTRODUCTION HERO -->
+        <header class="section-row">
+            <div class="text-content">
+                <span class="badge">Nainwan Operational Unit</span>
+                <h1>Gauras Dairy Farm</h1>
+                <div class="text-block">
+                    <p>We deliver raw, pure milk straight from our farm setup to your doorstep. Safe, untouched logistics handling morning and evening allocations cleanly across Nainwa.</p>
+                </div>
+            </div>
+            <div class="image-content">
+                <div class="cutter-img-container clip-slope-right">
+                    <img src="/images/hero.jpg" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1527004013197-933c4bb611b3?auto=format&fit=crop&w=800&q=80';" alt="Gauras Dairy Farm">
+                </div>
+            </div>
+        </header>
+
+        <!-- BLOCK 2: SAHIWAL CROSSBREED DATA -->
+        <section class="section-row">
+            <div class="text-content">
+                <span class="badge">Desi Breed Profiles</span>
+                <h2 class="section-header">Sahiwal Crossbreed Milk</h2>
+                <div class="text-block">
+                    <p>Our Sahiwal crossbreed selection is celebrated for its premium quality (A2 type) properties. Combining native structural traits with superior adaptation profiles, this milk delivers a sweet natural undertone, clean texture, and rich daily nutritional value.</p>
+                    <div class="user-editable-space">✍️ Add your specific text detailing your Sahiwal herd management here...</div>
+                </div>
+            </div>
+            <div class="image-content">
+                <div class="cutter-img-container clip-slope-left">
+                    <img src="/images/sahiwal.jpg" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1570042225831-d98fa7577f1e?auto=format&fit=crop&w=800&q=80';" alt="Sahiwal Cross">
+                </div>
+            </div>
+        </section>
+
+        <!-- BLOCK 3: PREMIUM BUFFALO SYSTEM -->
+        <section class="section-row">
+            <div class="text-content">
+                <span class="badge">Rich Cream Segment</span>
+                <h2 class="section-header">Premium Murrah Buffalo</h2>
+                <div class="text-block">
+                    <p>Our Murrah buffalo line is selected specifically for consumers looking for thick, heavy-bodied milk. Murrah is universally acknowledged as the pinnacle of buffalo breeds, generating exceptional fat content ideal for pure ghee.</p>
+                </div>
+            </div>
+            <div class="image-content">
+                <div class="cutter-img-container clip-slope-right">
+                    <img src="/images/murrah.jpg" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1546182990-dffeafbe841d?auto=format&fit=crop&w=800&q=80';" alt="Murrah Buffalo Selection">
+                </div>
+            </div>
+        </section>
+
+        <!-- BLOCK 4: MACHINERY -->
+        <section class="section-row">
+            <div class="text-content">
+                <span class="badge">Zero Human Touch</span>
+                <h2 class="section-header">Modern Milking Machinery</h2>
+                <div class="text-block">
+                    <p>Hygiene is non-negotiable. We employ a premium automated bucket milking system from <u><a href="https://www.delaval.com/en-in/solutions/milking/bucket-milking/" target="_blank" style="color: var(--accent-blue); text-decoration: underline;">DeLaval</a></u> (our ₹85,000 mobile milking model). This extracts milk under strict sanitary parameters, keeping it completely untouched by human hands.</p>
+                </div>
+            </div>
+            <div class="image-content">
+                <div class="cutter-img-container clip-slope-left">
+                    <img src="/images/machinery.jpg" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1625246333195-78d9c38ad451?auto=format&fit=crop&w=800&q=80';" alt="DeLaval Milking Systems">
+                </div>
+            </div>
+        </section>
+
+        <!-- BLOCK 5: QUALITY & FAT ASSURANCE -->
+        <section class="section-row">
+            <div class="text-content">
+                <span class="badge">Purity Testing</span>
+                <h2 class="section-header">Natural Fat Percentages</h2>
+                <div class="text-block">
+                    <p>Our milk composition retains its organic proportions straight from the collection source. We do not skim, skim-blend, or standardize fat artificially.</p>
+                </div>
+            </div>
+            <div class="image-content">
+                <div class="milky-card" style="padding: 24px; text-align: center; background: #fffbeb;">
+                    <div style="font-size:36px; margin-bottom:6px;">🥛</div>
+                    <h4 style="color: var(--forest-green);">Purity Assured</h4>
+                    <p style="font-size: 16px; font-weight: normal; margin-top: 8px; color: var(--text-dark);">100% Whole Milk</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- BLOCK 6: EXPERT VETERINARY SERVICES -->
+        <section class="section-row">
+            <div class="text-content">
+                <span class="badge">On-Farm Healthcare</span>
+                <h2 class="section-header">Professional Animal Care</h2>
+                <div class="text-block">
+                    <p>We care about the health of our community's livestock just as much as our own. Because our operations are partnered directly with a professional veterinarian, we provide dedicated healthcare support for your animals too.</p>
+                    <p style="font-weight: 700; color: var(--accent-blue); margin-top: 8px;">Have an unhealthy cow, buffalo, or farm animal? Reach out directly via our WhatsApp line below to request medical assistance or expert guidance immediately.</p>
+                </div>
+            </div>
+            <div class="image-content">
+                <div class="cutter-img-container clip-slope-left">
+                    <img src="/images/vet.jpg" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1584132967334-10e028bd69f7?auto=format&fit=crop&w=800&q=80';" alt="Veterinary Care">
+                </div>
+            </div>
+        </section>
+
+        <!-- BLOCK 7: PRICING MATRIX -->
+        <section class="section-row">
+            <div class="text-content">
+                <span class="badge">No Middlemen Markup</span>
+                <h2 class="section-header">Reasonable Pricing Structure</h2>
+                <div class="info-grid">
+                    <div class="milky-card">
+                        <h4>Sahiwal Milk</h4>
+                        <p>₹60<span style="font-size:13px; font-weight:700; color:var(--text-muted);">/Ltr</span></p>
+                    </div>
+                    <div class="milky-card">
+                        <h4>Murrah Milk</h4>
+                        <p>₹70<span style="font-size:13px; font-weight:700; color:var(--text-muted);">/Ltr</span></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- BLOCK 8: TIMINGS -->
+        <section class="section-row">
+            <div class="text-content">
+                <span class="badge">Nainwan Fleet Schedule</span>
+                <h2 class="section-header">Delivery & Farm Timings</h2>
+                <div class="text-block">
+                    <p>To match your breakfast and evening cooking schedules seamlessly, our delivery vehicles complete regional routes on strict schedules twice a day.</p>
+                </div>
+            </div>
+            <div class="image-content">
+                <div class="milky-card" style="padding: 24px; text-align: center; background: #fffbeb;">
+                    <div style="font-size:36px; margin-bottom:6px;">🚜</div>
+                    <h4 style="color: var(--forest-green);">Active Fleet</h4>
+                    <p style="font-size: 16px; font-weight: normal; margin-top: 8px; color: var(--text-dark);">2x Daily Delivery</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- GLOBAL FOOTER -->
+        <footer class="global-footer">
+            <div style="font-size: 28px; margin-bottom: 8px;">🚜 🌾</div>
+            <h3>Gauras Dairy Farm</h3>
+            <p>Direct farm-to-home raw milk allocations in Nainwa, Rajasthan.</p>
+            <div class="social-links">
+                <a href="https://instagram.com/gaurasdairy" target="_blank">📸 Instagram</a>
+                <a href="qna.html">❓ Q&As Hub</a>
+                <a href="app-intro.html">📱 Our App</a>
+            </div>
+            <p style="font-size: 11px; color: var(--text-muted); margin-top: 16px;">© 2026 Gauras Dairy Farm. Handcrafted with love.</p>
+        </footer>
+    </div>
+</div>
+
+<!-- STICKY BOTTOM CONTROL FOOTBAR -->
+<nav class="bottom-nav-bar">
+    <a href="https://wa.me/917073526682" target="_blank" class="btn-whatsapp" aria-label="Message on WhatsApp">
+        <svg viewBox="0 0 24 24"><path d="M12.012 2c-5.508 0-9.985 4.478-9.985 9.984 0 1.757.455 3.407 1.253 4.852l-1.331 4.865 4.984-1.307c1.402.766 2.998 1.205 4.69 1.205 5.508 0 9.985-4.479 9.985-9.985 0-5.507-4.477-9.984-9.985-9.984zm6.055 14.122c-.248.699-1.241 1.341-1.71 1.4-.469.059-.938.293-2.994-.52-2.627-1.04-4.275-3.763-4.406-3.937-.131-.174-1.066-1.417-1.066-2.704 0-1.287.674-1.92.915-2.181.242-.261.53-.326.707-.326.178 0 .356.002.509.009.157.007.369-.06.577.447.213.518.73 1.779.794 1.909.064.13.107.282.021.456-.085.174-.128.282-.255.434-.127.152-.267.34-.381.456-.128.129-.262.27-.113.527.149.256.662 1.092 1.418 1.766.974.87 1.794 1.14 2.05 1.27.256.129.405.108.555-.065.15-.174.64-.746.811-1.001.171-.255.342-.212.576-.125.234.086 1.488.702 1.744.832.256.129.426.195.489.303.064.109.064.63-.184 1.329z"/></svg>
+    </a>
+    
+    <a href="order.html" class="btn-primary" id="allocationBtn" onclick="smoothPageTransition(event)">Book Milk Allocation</a>
+</nav>
+
+<script>
+    // 1. Springy Scroll-reveal tracking
+    const sections = document.querySelectorAll('.section-row');
+    const revealOnScroll = () => {
+        const triggerBottom = (window.innerHeight / 5) * 4.4;
+        sections.forEach(section => {
+            if (section.getBoundingClientRect().top < triggerBottom) {
+                section.classList.add('active');
+            }
+        });
+    };
+    window.addEventListener('DOMContentLoaded', revealOnScroll);
+    window.addEventListener('scroll', revealOnScroll);
+
+    // 2. Click Registry and Smooth Intercept Animation Execution
+    function smoothPageTransition(event) {
+        event.preventDefault(); // Stop standard abrupt browser page snap
+        
+        const btn = document.getElementById('allocationBtn');
+        const targetUrl = btn.getAttribute('href');
+        
+        // Instant Click Registry Visual Feedback State
+        btn.classList.add('clicked');
+        btn.innerText = "Opening Request Form...";
+        
+        // Smooth out the parent frame after feedback is registered
+        setTimeout(() => {
+            document.body.classList.add('fade-out');
+            
+            // Route page targets cleanly right as transition finishes
+            setTimeout(() => {
+                window.location.href = targetUrl;
+            }, 500); // Matches the CSS transition duration
+        }, 150); // Small pause to allow click registry feedback to register visually
+    }
+
+    // 3. Toggle Menu Drawer
+    function toggleMenu() {
+        const drawer = document.getElementById('menuDrawer');
+        const overlay = document.getElementById('drawerOverlay');
+        drawer.classList.toggle('active');
+        overlay.classList.toggle('active');
+    }
+</script>
+</body>
+</html>
