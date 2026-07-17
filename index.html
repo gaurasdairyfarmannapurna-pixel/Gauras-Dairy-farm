@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gauras Dairy Farm — Pure Local Produce</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Lilita+One&display=swap');
+
         :root {
             --bg-sky: #e0f2fe;          /* Friendly warm blue sky */
             --bg-gradient: linear-gradient(180deg, #bae6fd 0%, #e0f2fe 40%, #f0fdf4 100%); /* Meadow sky gradient */
@@ -52,7 +54,7 @@
         .scroll-container {
             width: 100%;
             max-width: 480px; /* Lock layout strictly to mobile-first viewport */
-            padding: 24px 20px 140px 20px;
+            padding: 24px 20px 185px 20px;
             display: flex;
             flex-direction: column;
             gap: 75px;
@@ -75,8 +77,9 @@
             padding: 10px;
         }
         .global-header .logo {
-            font-size: 20px;
-            font-weight: 900;
+            font-size: 28px;
+            font-weight: normal;
+            font-family: 'Lilita One', 'Georgia', serif;
             color: var(--forest-green);
             display: flex;
             align-items: center;
@@ -504,7 +507,6 @@
     <button class="close-btn" onclick="toggleMenu()">&times;</button>
     <nav class="drawer-nav">
         <a href="/">🌾 Farm Home</a>
-        <a href="order.html">🥛 Book Milk Allocation</a>
         <a href="qna.html">❓ Q&As / Help Hub</a>
         <a href="app-intro.html">📱 Dairy Manager App</a>
     </nav>
@@ -604,7 +606,7 @@
                 <span class="badge">Zero Human Touch</span>
                 <h2 class="section-header">Modern Milking Machinery</h2>
                 <div class="text-block">
-                    <p>Hygiene is non-negotiable. We employ a premium automated bucket milking system from <u><a href="https://www.delaval.com/en-in/solutions/milking/bucket-milking/" target="_blank" style="color: var(--accent-blue); text-decoration: underline;">DeLaval</a></u> (our ₹85,000 mobile milking model). This extracts milk under strict sanitary parameters, keeping it completely untouched by human hands.</p>
+                    <p>Hygiene is non-negotiable. We employ a premium automated bucket milking system from <u><a href="https://www.delaval.com/en-in/solutions/milking/bucket-milking/" target="_blank" style="color: var(--accent-blue); text-decoration: underline;">DeLaval</a></u>. This extracts milk under strict sanitary parameters, keeping it completely untouched by human hands.</p>
                 </div>
             </div>
             <div class="image-content">
@@ -673,14 +675,16 @@
                 <span class="badge">Nainwan Fleet Schedule</span>
                 <h2 class="section-header">Delivery & Farm Timings</h2>
                 <div class="text-block">
-                    <p>To match your breakfast and evening cooking schedules seamlessly, our delivery vehicles complete regional routes on strict schedules twice a day.</p>
+                    <p>To match your breakfast and evening cooking schedules seamlessly, our delivery vehicles complete regional routes on strict schedules twice a day:</p>
+                    <p style="font-weight: 700; margin-top: 8px; color: var(--accent-blue);">🌅 Morning: 6:30 AM – 8:30 AM</p>
+                    <p style="font-weight: 700; margin-top: 4px; color: var(--accent-blue);">🌇 Evening: 5:30 PM – 7:30 PM</p>
                 </div>
             </div>
             <div class="image-content">
                 <div class="milky-card" style="padding: 24px; text-align: center; background: #fffbeb;">
                     <div style="font-size:36px; margin-bottom:6px;">🚜</div>
                     <h4 style="color: var(--forest-green);">Active Fleet</h4>
-                    <p style="font-size: 16px; font-weight: normal; margin-top: 8px; color: var(--text-dark);">2x Daily Delivery</p>
+                    <p style="font-size: 16px; font-weight: normal; margin-top: 8px; color: var(--text-dark);">Morning & Evening</p>
                 </div>
             </div>
         </section>
@@ -691,7 +695,7 @@
             <h3>Gauras Dairy Farm</h3>
             <p>Direct farm-to-home raw milk allocations in Nainwa, Rajasthan.</p>
             <div class="social-links">
-                <a href="https://instagram.com/gaurasdairy" target="_blank">📸 Instagram</a>
+                <a href="#" onclick="event.preventDefault()">📸 Instagram</a>
                 <a href="qna.html">❓ Q&As Hub</a>
                 <a href="app-intro.html">📱 Our App</a>
             </div>
