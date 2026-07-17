@@ -415,6 +415,7 @@ def app_intro(): return open('app_intro.html').read()
 def serve_images(filename):
     return send_from_directory('images', filename)
 
+init_db()
+
 if __name__ == '__main__':
-    init_db()
     app.run(host='0.0.0.0', port=5000, debug=True)
