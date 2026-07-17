@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Q&As Help Hub — Gauras Dairy</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Lilita+One&display=swap');
+
         :root {
             --bg-sky: #bae6fd;
             --bg-gradient: linear-gradient(180deg, #bae6fd 0%, #e0f2fe 40%, #f0fdf4 100%);
@@ -58,8 +60,9 @@
             padding: 10px;
         }
         .global-header .logo {
-            font-size: 20px;
-            font-weight: 900;
+            font-size: 28px;
+            font-weight: normal;
+            font-family: 'Lilita One', 'Georgia', serif;
             color: var(--forest-green);
             display: flex;
             align-items: center;
@@ -246,7 +249,6 @@
     <button class="close-btn" onclick="toggleMenu()">&times;</button>
     <nav class="drawer-nav">
         <a href="/">🌾 Farm Home</a>
-        <a href="order.html">🥛 Book Milk Allocation</a>
         <a href="qna.html">❓ Q&As / Help Hub</a>
         <a href="app-intro.html">📱 Dairy Manager App</a>
     </nav>
@@ -270,7 +272,7 @@
         <div class="qa-card">
             <h3 class="question"><span>🥛</span> What is Milk Fat & how is it calculated?</h3>
             <div class="answer">
-                <p>Fat represents the natural rich cream content in the milk. In Nainwa, we calculate it using automated <strong>centrifugal milk testing machines</strong>. A milk sample is spun to separate the lipids, giving an exact percentage. Our raw Sahiwal Cow milk ranges between <strong>4.5% - 5.5% fat</strong>, while Murrah Buffalo milk is a thick <strong>6.5% - 8.5% fat</strong>.</p>
+                <p>Fat represents the natural rich cream content in the milk. In Nainwa, we calculate it using automated <strong>centrifugal milk testing machines</strong>. A milk sample is spun to separate the lipids, giving an exact percentage. Our raw Sahiwal Cow milk ranges between <strong>3.5% - 4.5% fat</strong>, while Murrah Buffalo milk is a thick <strong>6% - 8% fat</strong>.</p>
             </div>
         </div>
 
@@ -278,7 +280,7 @@
         <div class="qa-card">
             <h3 class="question"><span>🧪</span> What is SNF and Lactometer Degree?</h3>
             <div class="answer">
-                <p><strong>SNF (Solids-Not-Fat)</strong> represents the dry nutrients in milk excluding fat. This includes proteins, calcium, lactose, and minerals. <strong>Degree</strong> is the density reading measured using a lactometer. Pure whole milk has a degree of <strong>26 to 30</strong>. This density test is our guarantee that no water has been artificially blended into your milk.</p>
+                <p><strong>SNF (Solids-Not-Fat)</strong> represents the dry nutrients in milk excluding fat (such as proteins, calcium, lactose, and minerals). For premium raw milk, the target SNF should be between <strong>9% to 11%</strong>. <strong>Degree</strong> is the density reading measured using a lactometer. Pure whole milk has a degree of <strong>26 to 30</strong>. This density test is our guarantee that no water has been artificially blended into your milk.</p>
             </div>
         </div>
 
@@ -313,7 +315,7 @@
         <h3>Gauras Dairy Farm</h3>
         <p>Direct farm-to-home raw milk allocations in Nainwa, Rajasthan.</p>
         <div class="social-links">
-            <a href="https://instagram.com/gaurasdairy" target="_blank">📸 Instagram</a>
+            <a href="#" onclick="event.preventDefault()">📸 Instagram</a>
             <a href="/">🌾 Farm Home</a>
             <a href="app-intro.html">📱 Our App</a>
         </div>
