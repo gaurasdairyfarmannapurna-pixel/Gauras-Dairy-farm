@@ -5,29 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gauras Dashboard — Secure Billing</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Lilita+One&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Lilita+One&family=Outfit:wght@300;400;600;800&display=swap');
 
         :root {
-            --bg-sky: #bae6fd;
-            --bg-gradient: linear-gradient(180deg, #bae6fd 0%, #e0f2fe 40%, #f0fdf4 100%);
-            --card-paper: #fdfdfb;
-            --text-dark: #7c2d12;
-            --text-muted: #9a3412;
-            --accent-blue: #0284c7;
-            --border-wood: #7c2d12;
-            --success: #16803d;
+            --bg-dark: #070b19;          /* Deep space blue background */
+            --bg-grid: #0d1527;          /* Card / section grid background */
+            --accent-blue: #0066ff;      /* Cobalt/electric blue */
+            --accent-cyan: #00f0ff;      /* Cyan neon glow */
+            --text-light: #f3f4f6;       /* Bright light text */
+            --text-muted: #9ca3af;       /* Cool gray muted text */
+            --border-blue: #1e293b;      /* Dark slate border */
+            --glass-bg: rgba(13, 21, 39, 0.75); /* Translucent card glass */
+            --success: #00ff66;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         }
 
         body {
-            background: var(--bg-gradient);
-            color: var(--text-dark);
+            background-color: var(--bg-dark);
+            color: var(--text-light);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -50,19 +51,21 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 3px dashed var(--border-wood);
+            border-bottom: 2px solid var(--border-blue);
             padding-bottom: 14px;
             z-index: 10;
             position: relative;
-            background: rgba(240, 253, 244, 0.4);
+            background: var(--glass-bg);
             border-radius: 8px;
             padding: 10px;
+            backdrop-filter: blur(8px);
         }
         .global-header .logo {
             font-size: 28px;
             font-weight: normal;
-            font-family: 'Lilita One', 'Georgia', serif;
-            color: var(--forest-green);
+            font-family: 'Lilita One', cursive;
+            color: var(--accent-cyan);
+            text-shadow: 0 0 12px rgba(0, 240, 255, 0.4);
             display: flex;
             align-items: center;
             gap: 6px;
@@ -81,8 +84,9 @@
         .burger-btn span {
             width: 100%;
             height: 3px;
-            background-color: var(--border-wood);
+            background-color: var(--accent-cyan);
             border-radius: 2px;
+            box-shadow: 0 0 6px rgba(0, 240, 255, 0.3);
         }
 
         /* Drawer Overlay */
@@ -92,7 +96,8 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(124, 45, 18, 0.45);
+            background: rgba(7, 11, 25, 0.7);
+            backdrop-filter: blur(6px);
             z-index: 9998;
             opacity: 0;
             pointer-events: none;
@@ -110,9 +115,9 @@
             right: -300px;
             width: 280px;
             height: 100%;
-            background: var(--card-paper);
-            border-left: 4px solid var(--border-wood);
-            box-shadow: -8px 0 24px rgba(124, 45, 18, 0.2);
+            background: var(--bg-grid);
+            border-left: 3px solid var(--accent-blue);
+            box-shadow: -8px 0 24px rgba(0, 0, 0, 0.5);
             z-index: 9999;
             padding: 32px 20px;
             display: flex;
@@ -127,7 +132,7 @@
             font-size: 32px;
             background: transparent;
             border: none;
-            color: var(--border-wood);
+            color: var(--accent-cyan);
             cursor: pointer;
             margin-bottom: 24px;
             line-height: 1;
@@ -139,8 +144,8 @@
         }
         .drawer-nav a {
             font-size: 16px;
-            font-weight: 800;
-            color: var(--text-dark);
+            font-weight: 600;
+            color: var(--text-light);
             text-decoration: none;
             padding: 12px 16px;
             border: 2px solid transparent;
@@ -151,27 +156,27 @@
             gap: 8px;
         }
         .drawer-nav a:hover {
-            background: #fef08a;
-            border-color: var(--border-wood);
+            background: rgba(0, 102, 255, 0.15);
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
             transform: translateY(-2px);
         }
 
         /* --- GLOBAL FOOTER --- */
         .global-footer {
-            border-top: 3px dashed var(--border-wood);
+            border-top: 2px solid var(--border-blue);
             padding: 24px 16px;
             text-align: center;
-            background: var(--card-paper);
-            border-radius: 16px;
-            border: 3px solid var(--border-wood);
-            box-shadow: 0 6px 12px rgba(124, 45, 18, 0.08);
+            background: var(--bg-grid);
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
             position: relative;
             margin-top: 10px;
         }
         .global-footer h3 {
             font-size: 18px;
-            font-weight: 900;
-            color: var(--forest-green);
+            font-weight: 800;
+            color: var(--accent-cyan);
             margin-bottom: 4px;
         }
         .global-footer p {
@@ -188,19 +193,31 @@
         .social-links a {
             font-size: 13px;
             font-weight: 700;
-            color: var(--accent-blue);
+            color: var(--accent-cyan);
             text-decoration: none;
-            border-bottom: 2px solid var(--accent-blue);
+            border-bottom: 1px solid var(--accent-cyan);
         }
 
         /* --- RECEIPT CONTENT --- */
         .receipt-card {
-            background-color: var(--card-paper);
-            border: 3px solid var(--border-wood);
-            border-radius: 20px 8px 20px 8px;
+            background-color: var(--bg-grid);
+            border: 2px solid var(--border-blue);
+            border-radius: 12px;
             padding: 32px 24px;
             text-align: center;
-            box-shadow: 0 10px 20px rgba(124, 45, 18, 0.12);
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .receipt-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan));
         }
 
         h1 { 
@@ -208,29 +225,31 @@
             margin-bottom: 12px; 
             font-weight: 800; 
             color: var(--success);
+            text-shadow: 0 0 10px rgba(0, 255, 102, 0.2);
         }
 
         p.info-text { 
-            color: var(--text-dark); 
+            color: var(--text-muted); 
             line-height: 1.6; 
             margin-bottom: 28px; 
             font-size: 15px; 
         }
 
         .status-badge {
-            background: #f0fdf4;
+            background: rgba(0, 255, 102, 0.05);
             border: 2px dashed var(--success);
             padding: 16px;
             border-radius: 12px;
             font-size: 14px;
             color: var(--success);
             font-weight: 700;
+            box-shadow: 0 0 10px rgba(0, 255, 102, 0.1);
         }
 
         .back-btn {
             display: inline-block;
             margin-top: 24px;
-            color: var(--accent-blue);
+            color: var(--accent-cyan);
             text-decoration: none;
             font-weight: 700;
             font-size: 14px;
@@ -239,6 +258,7 @@
 
         .back-btn:hover {
             transform: scale(1.05);
+            text-shadow: 0 0 8px rgba(0, 240, 255, 0.4);
         }
 
         @keyframes bounce {
